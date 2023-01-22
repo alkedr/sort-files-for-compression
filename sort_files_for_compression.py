@@ -45,30 +45,19 @@ with tarfile.open(fileobj=sys.stdin.buffer, mode='r:', ignore_zeros=True) as inp
             member[-1]
             for member in sorted(members)
         ]
-        # print(
-        #     sorted(list(set([
-        #         os.path.splitext(member.name)[1]
-        #         for member in input_tar.getmembers()
-        #     ]))),
-        #     file=sys.stderr,
-        # )
-        # print(
-        #     list(set([
-        #         mimetypes.guess_type(member.name) or 'Unknown'
-        #         for member in input_tar.getmembers()
-        #     ])),
-        #     file=sys.stderr,
-        # )
-        from collections import Counter
-        counter = Counter([
-            member[:-2]
-            for member in members
-        ])
-        for key in sorted(counter):
+        mime_to_members = {}
+        for member in members:
+            if member[2] not in mime_to_members:
+                mime_to_members[member[2]] = []
+            mime_to_members[member[2]].append(member)
+
+        for key in sorted(mime_to_members):
             print(
-                f'{key}, {counter[key]}',
+                f'{key}, {len(mime_to_members[key])} files, {sum([member[-1].size for member in mime_to_members[key]])} bytes:',
                 file=sys.stderr
             )
+            for member in mime_to_members[key]:
+                print(f'  {member[-1].name}', file=sys.stderr)
         for member in sorted_members:
             # print(member, file=sys.stderr)
             output_tar.addfile(
