@@ -2,6 +2,7 @@ import math
 import os
 import sys
 import tarfile
+import magic
 
 
 with tarfile.open(fileobj=sys.stdin.buffer, mode='r:', ignore_zeros=True) as input_tar:
@@ -15,12 +16,20 @@ with tarfile.open(fileobj=sys.stdin.buffer, mode='r:', ignore_zeros=True) as inp
                 # tar blocks with symlinks, hardlinks, devices etc are likely to have something in common.
                 member.type,
 
-                # Group by file extension.
-                # Files with the same extension are likely to have something in common.
-                os.path.splitext(member.name)[1],
+                magic.from_buffer(buffer=input_tar.extractfile(member=member).read(), mime=True) if member.isfile() else '',
 
-                # Group into buckets by size.
-                int(math.log(member.size + 1, 1024)),
+                # Binaries
+                # os.path.dirname(member.name).endswith('/bin'),
+                #
+                # # .so
+                # '.so' in os.path.basename(member.name),
+                #
+                # # Group by file extension.
+                # # Files with the same extension are likely to have something in common.
+                # # os.path.splitext(member.name)[1],
+                #
+                # # Group into buckets by size.
+                # int(math.log(member.size + 1, 1024)),
 
                 # Group by full path.
                 # Files in the same directory are likely to have something in common.
@@ -36,6 +45,30 @@ with tarfile.open(fileobj=sys.stdin.buffer, mode='r:', ignore_zeros=True) as inp
             member[-1]
             for member in sorted(members)
         ]
+        # print(
+        #     sorted(list(set([
+        #         os.path.splitext(member.name)[1]
+        #         for member in input_tar.getmembers()
+        #     ]))),
+        #     file=sys.stderr,
+        # )
+        # print(
+        #     list(set([
+        #         mimetypes.guess_type(member.name) or 'Unknown'
+        #         for member in input_tar.getmembers()
+        #     ])),
+        #     file=sys.stderr,
+        # )
+        from collections import Counter
+        counter = Counter([
+            member[:-2]
+            for member in members
+        ])
+        for key in sorted(counter):
+            print(
+                f'{key}, {counter[key]}',
+                file=sys.stderr
+            )
         for member in sorted_members:
             # print(member, file=sys.stderr)
             output_tar.addfile(

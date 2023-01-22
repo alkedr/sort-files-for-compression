@@ -57,10 +57,12 @@ measure_compression_for_image() (
   print_compression_table_lines benchmark_tmp/archive.tar benchmark_tmp/reordered_archive.tar 'zstd -T0 -8'
   print_compression_table_lines benchmark_tmp/archive.tar benchmark_tmp/reordered_archive.tar 'zstd -T0 -9'
   print_compression_table_lines benchmark_tmp/archive.tar benchmark_tmp/reordered_archive.tar 'zstd -T0 -10'
-  print_compression_table_lines benchmark_tmp/archive.tar benchmark_tmp/reordered_archive.tar 'zstd -T0 -19'
-  print_compression_table_lines benchmark_tmp/archive.tar benchmark_tmp/reordered_archive.tar 'zstd -T0 -19 --ultra'
-  print_compression_table_lines benchmark_tmp/archive.tar benchmark_tmp/reordered_archive.tar 'zstd -T0 -19 --ultra --long=31'
+  print_compression_table_lines benchmark_tmp/archive.tar benchmark_tmp/reordered_archive.tar 'zstd -T0 -16'
+  print_compression_table_lines benchmark_tmp/archive.tar benchmark_tmp/reordered_archive.tar 'zstd -T0 -22 --ultra'
+  print_compression_table_lines benchmark_tmp/archive.tar benchmark_tmp/reordered_archive.tar 'zstd -T0 -22 --ultra --long=31'
+  print_compression_table_lines benchmark_tmp/archive.tar benchmark_tmp/reordered_archive.tar \
+    'zstd -T0 -22 --ultra --long=31 --zstd=strat=9,windowLog=31,hashLog=30,chainLog=30,searchLog=30,minMatch=3,targetLength=131072,overlapLog=9,ldmHashLog=30'
 )
 
-#measure_compression_for_image 'ubuntu:22.04'
-measure_compression_for_image 'nvidia/cuda:11.3.0-cudnn8-devel-ubuntu20.04'
+measure_compression_for_image 'ubuntu:22.04'
+#measure_compression_for_image 'nvidia/cuda:11.3.0-cudnn8-devel-ubuntu20.04'
