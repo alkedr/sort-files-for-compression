@@ -63,7 +63,7 @@ measure_compression_for_image() (
 #  print_compression_table_lines benchmark_tmp/archive.tar benchmark_tmp/reordered_archive.tar 'zstd -T0 -22 --ultra'
 #  print_compression_table_lines benchmark_tmp/archive.tar benchmark_tmp/reordered_archive.tar 'zstd -T0 -22 --ultra --long=31'
 #  print_compression_table_lines benchmark_tmp/archive.tar benchmark_tmp/reordered_archive.tar \
-    'zstd -T0 -22 --ultra --long=31 --zstd=strat=9,windowLog=31,hashLog=30,chainLog=30,searchLog=30,minMatch=3,targetLength=131072,overlapLog=9,ldmHashLog=30'
+#    'zstd -T0 -22 --ultra --long=31 --zstd=strat=9,windowLog=31,hashLog=30,chainLog=30,searchLog=30,minMatch=3,targetLength=131072,overlapLog=9,ldmHashLog=30'
 )
 
 measure_compression_for_image 'ubuntu:22.04'
