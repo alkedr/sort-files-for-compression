@@ -34,12 +34,12 @@ measure_compression_for_image() (
   sudo tar --create --sort=name --file=benchmark_tmp/archive.tar --directory=benchmark_tmp/extracted_archive .
 
   # Create reordered_archive.tar by reordering archive.tar
-  python3 sort_files_for_compression.py < benchmark_tmp/archive.tar > benchmark_tmp/reordered_archive.tar
-
-  # Extract reordered_archive.tar and compare it to the original directory
-  sudo tar --extract --same-owner --file=benchmark_tmp/reordered_archive.tar --directory=benchmark_tmp/extracted_reordered_archive
-  sudo diff --recursive --brief --no-dereference benchmark_tmp/extracted_archive benchmark_tmp/extracted_reordered_archive \
-    && echo 'No differences found between extracted original and extracted reordered'
+#  python3 sort_files_for_compression.py < benchmark_tmp/archive.tar > benchmark_tmp/reordered_archive.tar
+#
+#  # Extract reordered_archive.tar and compare it to the original directory
+#  sudo tar --extract --same-owner --file=benchmark_tmp/reordered_archive.tar --directory=benchmark_tmp/extracted_reordered_archive
+#  sudo diff --recursive --brief --no-dereference benchmark_tmp/extracted_archive benchmark_tmp/extracted_reordered_archive \
+#    && echo 'No differences found between extracted original and extracted reordered'
 
   python3 compression_optimizer2.py < benchmark_tmp/archive.tar
 
