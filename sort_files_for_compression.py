@@ -1,5 +1,6 @@
 import math
 import os
+import random
 import sys
 import tarfile
 import magic
@@ -14,9 +15,9 @@ with tarfile.open(fileobj=sys.stdin.buffer, mode='r:', ignore_zeros=True) as inp
 
                 # Group by type (regular file, dir, symlink, hardlink etc).
                 # tar blocks with symlinks, hardlinks, devices etc are likely to have something in common.
-                member.type,
+                # member.type,
 
-                magic.from_buffer(buffer=input_tar.extractfile(member=member).read(), mime=True) if member.isfile() else '',
+                magic.from_buffer(buffer=input_tar.extractfile(member=member).read(), mime=True).split('/')[0] if member.isfile() else '',
 
                 # Binaries
                 # os.path.dirname(member.name).endswith('/bin'),
@@ -41,23 +42,25 @@ with tarfile.open(fileobj=sys.stdin.buffer, mode='r:', ignore_zeros=True) as inp
             )
             for member in input_tar.getmembers()
         ]
+
+        mime_to_members = {}
+        for member in members:
+            if member[1] not in mime_to_members:
+                mime_to_members[member[1]] = []
+            mime_to_members[member[1]].append(member)
+
+        for mime in sorted(mime_to_members):
+            print(
+                f'{mime} {len(mime_to_members[mime])}, {sum([member[-1].size for member in mime_to_members[mime]]):_}',
+                file=sys.stderr,
+            )
+            for member in random.choices(mime_to_members[mime], k=min(5, len(mime_to_members[mime]))):
+                print(f'  {member[-1].name}', file=sys.stderr)
+
         sorted_members = [
             member[-1]
             for member in sorted(members)
         ]
-        mime_to_members = {}
-        for member in members:
-            if member[2] not in mime_to_members:
-                mime_to_members[member[2]] = []
-            mime_to_members[member[2]].append(member)
-
-        for key in sorted(mime_to_members):
-            print(
-                f'{key}, {len(mime_to_members[key])} files, {sum([member[-1].size for member in mime_to_members[key]])} bytes:',
-                file=sys.stderr
-            )
-            for member in mime_to_members[key]:
-                print(f'  {member[-1].name}', file=sys.stderr)
         for member in sorted_members:
             # print(member, file=sys.stderr)
             output_tar.addfile(

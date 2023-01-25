@@ -41,26 +41,28 @@ measure_compression_for_image() (
   sudo diff --recursive --brief --no-dereference benchmark_tmp/extracted_archive benchmark_tmp/extracted_reordered_archive \
     && echo 'No differences found between extracted original and extracted reordered'
 
+  python3 compression_optimizer2.py < benchmark_tmp/archive.tar
+
   # Compress both original and reordered archives in a bunch of different ways and print the results
-  set +x
-  printf "%s\n" "$IMAGE"
-  printf "|  Sorting  | Compression                    |     Size      | Delta (<0 is good) |\n"
-  printf "|    ---    | ---                            |          ---: |               ---: |\n"
-  print_compression_table_lines benchmark_tmp/archive.tar benchmark_tmp/reordered_archive.tar 'cat'
-  print_compression_table_lines benchmark_tmp/archive.tar benchmark_tmp/reordered_archive.tar 'zstd -T0 -1'
-  print_compression_table_lines benchmark_tmp/archive.tar benchmark_tmp/reordered_archive.tar 'zstd -T0 -2'
-  print_compression_table_lines benchmark_tmp/archive.tar benchmark_tmp/reordered_archive.tar 'zstd -T0 -3'
-  print_compression_table_lines benchmark_tmp/archive.tar benchmark_tmp/reordered_archive.tar 'zstd -T0 -4'
-  print_compression_table_lines benchmark_tmp/archive.tar benchmark_tmp/reordered_archive.tar 'zstd -T0 -5'
-  print_compression_table_lines benchmark_tmp/archive.tar benchmark_tmp/reordered_archive.tar 'zstd -T0 -6'
-  print_compression_table_lines benchmark_tmp/archive.tar benchmark_tmp/reordered_archive.tar 'zstd -T0 -7'
-  print_compression_table_lines benchmark_tmp/archive.tar benchmark_tmp/reordered_archive.tar 'zstd -T0 -8'
-  print_compression_table_lines benchmark_tmp/archive.tar benchmark_tmp/reordered_archive.tar 'zstd -T0 -9'
-  print_compression_table_lines benchmark_tmp/archive.tar benchmark_tmp/reordered_archive.tar 'zstd -T0 -10'
-  print_compression_table_lines benchmark_tmp/archive.tar benchmark_tmp/reordered_archive.tar 'zstd -T0 -16'
-  print_compression_table_lines benchmark_tmp/archive.tar benchmark_tmp/reordered_archive.tar 'zstd -T0 -22 --ultra'
-  print_compression_table_lines benchmark_tmp/archive.tar benchmark_tmp/reordered_archive.tar 'zstd -T0 -22 --ultra --long=31'
-  print_compression_table_lines benchmark_tmp/archive.tar benchmark_tmp/reordered_archive.tar \
+#  set +x
+#  printf "%s\n" "$IMAGE"
+#  printf "|  Sorting  | Compression                    |     Size      | Delta (<0 is good) |\n"
+#  printf "|    ---    | ---                            |          ---: |               ---: |\n"
+#  print_compression_table_lines benchmark_tmp/archive.tar benchmark_tmp/reordered_archive.tar 'cat'
+#  print_compression_table_lines benchmark_tmp/archive.tar benchmark_tmp/reordered_archive.tar 'zstd -T0 -1'
+#  print_compression_table_lines benchmark_tmp/archive.tar benchmark_tmp/reordered_archive.tar 'zstd -T0 -2'
+#  print_compression_table_lines benchmark_tmp/archive.tar benchmark_tmp/reordered_archive.tar 'zstd -T0 -3'
+#  print_compression_table_lines benchmark_tmp/archive.tar benchmark_tmp/reordered_archive.tar 'zstd -T0 -4'
+#  print_compression_table_lines benchmark_tmp/archive.tar benchmark_tmp/reordered_archive.tar 'zstd -T0 -5'
+#  print_compression_table_lines benchmark_tmp/archive.tar benchmark_tmp/reordered_archive.tar 'zstd -T0 -6'
+#  print_compression_table_lines benchmark_tmp/archive.tar benchmark_tmp/reordered_archive.tar 'zstd -T0 -7'
+#  print_compression_table_lines benchmark_tmp/archive.tar benchmark_tmp/reordered_archive.tar 'zstd -T0 -8'
+#  print_compression_table_lines benchmark_tmp/archive.tar benchmark_tmp/reordered_archive.tar 'zstd -T0 -9'
+#  print_compression_table_lines benchmark_tmp/archive.tar benchmark_tmp/reordered_archive.tar 'zstd -T0 -10'
+#  print_compression_table_lines benchmark_tmp/archive.tar benchmark_tmp/reordered_archive.tar 'zstd -T0 -16'
+#  print_compression_table_lines benchmark_tmp/archive.tar benchmark_tmp/reordered_archive.tar 'zstd -T0 -22 --ultra'
+#  print_compression_table_lines benchmark_tmp/archive.tar benchmark_tmp/reordered_archive.tar 'zstd -T0 -22 --ultra --long=31'
+#  print_compression_table_lines benchmark_tmp/archive.tar benchmark_tmp/reordered_archive.tar \
     'zstd -T0 -22 --ultra --long=31 --zstd=strat=9,windowLog=31,hashLog=30,chainLog=30,searchLog=30,minMatch=3,targetLength=131072,overlapLog=9,ldmHashLog=30'
 )
 
